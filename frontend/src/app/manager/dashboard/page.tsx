@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend 
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { RouteGuard } from '@/components/RouteGuard';
 import { AppShell } from '@/components/AppShell';
@@ -114,37 +114,28 @@ export default function ManagerDashboardPage() {
               </ResponsiveContainer>
             </ChartCard>
 
-            {/* <ChartCard title="Workload by project">
+            <ChartCard title="Workload by project">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
-                  <Pie data={workload} dataKey="value" nameKey="label" outerRadius={80} label>
+                  <Pie
+                    data={workload}
+                    dataKey="value"
+                    innerRadius={38}
+                    nameKey="label"
+                    outerRadius={54}
+                    paddingAngle={2}
+                    stroke="none"
+                    label={({ label, value }) => `${label} (${value})`}
+                  >
                     {workload.map((_, i) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} />
                     ))}
                   </Pie>
+                  <Legend verticalAlign="bottom" height={24} />
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </ChartCard> */}
-            <ChartCard title="Workload by project">
-  <ResponsiveContainer width="100%" height={220}>
-    <PieChart>
-      <Pie
-        data={workload}
-        dataKey="value"
-        nameKey="label"
-        outerRadius={80}
-        label={({ label, value }) => `${label} (${value})`}
-      >
-        {workload.map((_, i) => (
-          <Cell key={i} fill={COLORS[i % COLORS.length]} />
-        ))}
-      </Pie>
-      <Legend verticalAlign="bottom" height={24} />
-      <Tooltip />
-    </PieChart>
-  </ResponsiveContainer>
-</ChartCard>
+            </ChartCard>
 
             <ChartCard title="Time spent by task type (team-wide)">
               <ResponsiveContainer width="100%" height={220}>
@@ -157,34 +148,17 @@ export default function ManagerDashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
             </ChartCard>
-
-            {/* <ChartCard title="Submission status by member">
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={statusByMember} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f1f1" />
-                  <XAxis
-                    type="number"
-                    domain={[0, 3]}
-                    ticks={[0, 1, 2, 3]}
-                    tickFormatter={(v) => STATUS_LABELS[v]}
-                    tick={{ fontSize: 11 }}
-                  />
-                  <YAxis type="category" dataKey="label" tick={{ fontSize: 12 }} width={90} />
-                  <Tooltip formatter={(v: number) => STATUS_LABELS[v]} />
-                  <Bar dataKey="value" fill="#7c3aed" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartCard> */}
+            
             <ChartCard title="Submission status by member">
-  <div className="space-y-2">
-    {statusByMember.map((m) => (
-      <div key={m.label} className="flex items-center justify-between text-sm">
-        <span className="text-gray-700">{m.label}</span>
-        <StatusBadge status={ORDINAL_TO_STATUS[m.value]} />
-      </div>
-    ))}
-  </div>
-</ChartCard>
+              <div className="space-y-2">
+                {statusByMember.map((m) => (
+                  <div key={m.label} className="flex items-center justify-between text-sm">
+                    <span className="text-gray-700">{m.label}</span>
+                    <StatusBadge status={ORDINAL_TO_STATUS[m.value]} />
+                  </div>
+                ))}
+              </div>
+            </ChartCard>
           </div>
 
           <ChartCard title="Recent activity">
