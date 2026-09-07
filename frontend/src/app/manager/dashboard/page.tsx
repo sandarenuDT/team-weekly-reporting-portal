@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend 
 } from 'recharts';
 import { RouteGuard } from '@/components/RouteGuard';
 import { AppShell } from '@/components/AppShell';
@@ -19,11 +19,16 @@ import {
   getTasksTrend,
   getWorkloadByProject,
 } from '@/lib/dashboardService';
-import { ChartSeries, DashboardMetrics } from '@/types';
-
+import { ChartSeries, DashboardMetrics, ReportStatus } from '@/types';
+import { StatusBadge } from '@/components/StatusBadge';
 const COLORS = ['#2563eb', '#16a34a', '#d97706', '#dc2626', '#7c3aed', '#0891b2'];
 const STATUS_LABELS = ['Draft', 'Submitted', 'Needs correction', 'Approved'];
-
+const ORDINAL_TO_STATUS: Record<number, ReportStatus> = {
+  0: 'DRAFT',
+  1: 'SUBMITTED',
+  2: 'NEEDS_CORRECTION',
+  3: 'APPROVED',
+};
 function mondayOfCurrentWeek(): string {
   const today = new Date();
   const day = today.getDay() === 0 ? 7 : today.getDay();
@@ -109,7 +114,7 @@ export default function ManagerDashboardPage() {
               </ResponsiveContainer>
             </ChartCard>
 
-            <ChartCard title="Workload by project">
+            {/* <ChartCard title="Workload by project">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie data={workload} dataKey="value" nameKey="label" outerRadius={80} label>
@@ -120,7 +125,26 @@ export default function ManagerDashboardPage() {
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </ChartCard>
+            </ChartCard> */}
+            <ChartCard title="Workload by project">
+  <ResponsiveContainer width="100%" height={220}>
+    <PieChart>
+      <Pie
+        data={workload}
+        dataKey="value"
+        nameKey="label"
+        outerRadius={80}
+        label={({ label, value }) => `${label} (${value})`}
+      >
+        {workload.map((_, i) => (
+          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+        ))}
+      </Pie>
+      <Legend verticalAlign="bottom" height={24} />
+      <Tooltip />
+    </PieChart>
+  </ResponsiveContainer>
+</ChartCard>
 
             <ChartCard title="Time spent by task type (team-wide)">
               <ResponsiveContainer width="100%" height={220}>
@@ -134,7 +158,7 @@ export default function ManagerDashboardPage() {
               </ResponsiveContainer>
             </ChartCard>
 
-            <ChartCard title="Submission status by member">
+            {/* <ChartCard title="Submission status by member">
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={statusByMember} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f1f1" />
@@ -150,7 +174,17 @@ export default function ManagerDashboardPage() {
                   <Bar dataKey="value" fill="#7c3aed" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </ChartCard>
+            </ChartCard> */}
+            <ChartCard title="Submission status by member">
+  <div className="space-y-2">
+    {statusByMember.map((m) => (
+      <div key={m.label} className="flex items-center justify-between text-sm">
+        <span className="text-gray-700">{m.label}</span>
+        <StatusBadge status={ORDINAL_TO_STATUS[m.value]} />
+      </div>
+    ))}
+  </div>
+</ChartCard>
           </div>
 
           <ChartCard title="Recent activity">
