@@ -43,7 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function login(email: string, password: string) {
     const response = await loginRequest(email, password);
     persistSession(response);
-    router.push(response.role === 'MANAGER' ? '/manager/dashboard' : '/member/my-report');
+    // router.push(response.role === 'MANAGER' ? '/manager/dashboard' : '/member/my-report');
+    router.push(response.role === 'MANAGER' ? '/manager/dashboard' : '/member/dashboard');
   }
 
   function logout() {
@@ -69,3 +70,4 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
+

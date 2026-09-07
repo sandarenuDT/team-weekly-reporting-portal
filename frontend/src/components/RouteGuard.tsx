@@ -10,8 +10,6 @@ interface Props {
   children: React.ReactNode;
 }
 
-// Wraps any page that requires auth. If allowedRoles is omitted, any
-// authenticated user (either role) may view it.
 export function RouteGuard({ allowedRoles, children }: Props) {
   const { user, loading } = useAuth();
   const router = useRouter();
