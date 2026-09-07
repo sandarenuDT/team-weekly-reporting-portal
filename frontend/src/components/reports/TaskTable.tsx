@@ -13,6 +13,9 @@ const EMPTY_TASK: Task = {
   status: 'NOT_STARTED',
 };
 
+const inputCls =
+  'w-full border border-gray-200 rounded-md px-2 py-1.5 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition bg-white';
+
 export function TaskTable({ tasks, onChange }: Props) {
   function updateTask(index: number, field: keyof Task, value: any) {
     const next = [...tasks];
@@ -30,19 +33,19 @@ export function TaskTable({ tasks, onChange }: Props) {
 
   return (
     <div>
-      <div className="overflow-x-auto border border-gray-200 rounded">
+      <div className="overflow-x-auto border border-gray-200 rounded-xl">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 text-left">
+          <thead className="bg-brand-bg text-brand-navy text-left">
             <tr>
-              <th className="px-3 py-2 font-medium">Task</th>
-              <th className="px-3 py-2 font-medium w-28">Priority</th>
-              <th className="px-3 py-2 font-medium w-24">Planned %</th>
-              <th className="px-3 py-2 font-medium w-24">Actual %</th>
-              <th className="px-3 py-2 font-medium w-32">Status</th>
-              <th className="px-3 py-2 font-medium w-24">Planned hrs</th>
-              <th className="px-3 py-2 font-medium w-24">Spent hrs</th>
-              <th className="px-3 py-2 font-medium">Deliverable</th>
-              <th className="px-2 py-2 w-8" />
+              <th className="px-3 py-2.5 font-medium">Task</th>
+              <th className="px-3 py-2.5 font-medium w-28">Priority</th>
+              <th className="px-3 py-2.5 font-medium w-24">Planned %</th>
+              <th className="px-3 py-2.5 font-medium w-24">Actual %</th>
+              <th className="px-3 py-2.5 font-medium w-32">Status</th>
+              <th className="px-3 py-2.5 font-medium w-24">Planned hrs</th>
+              <th className="px-3 py-2.5 font-medium w-24">Spent hrs</th>
+              <th className="px-3 py-2.5 font-medium">Deliverable</th>
+              <th className="px-2 py-2.5 w-8" />
             </tr>
           </thead>
           <tbody>
@@ -52,7 +55,7 @@ export function TaskTable({ tasks, onChange }: Props) {
                   <input
                     value={task.name}
                     onChange={(e) => updateTask(i, 'name', e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                     placeholder="Task name"
                   />
                 </td>
@@ -60,7 +63,7 @@ export function TaskTable({ tasks, onChange }: Props) {
                   <select
                     value={task.priority}
                     onChange={(e) => updateTask(i, 'priority', e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -72,7 +75,7 @@ export function TaskTable({ tasks, onChange }: Props) {
                     type="number" min={0} max={100}
                     value={task.plannedPct ?? ''}
                     onChange={(e) => updateTask(i, 'plannedPct', Number(e.target.value))}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -80,14 +83,14 @@ export function TaskTable({ tasks, onChange }: Props) {
                     type="number" min={0} max={100}
                     value={task.actualPct ?? ''}
                     onChange={(e) => updateTask(i, 'actualPct', Number(e.target.value))}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   />
                 </td>
                 <td className="px-3 py-2">
                   <select
                     value={task.status}
                     onChange={(e) => updateTask(i, 'status', e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   >
                     <option value="NOT_STARTED">Not started</option>
                     <option value="IN_PROGRESS">In progress</option>
@@ -100,7 +103,7 @@ export function TaskTable({ tasks, onChange }: Props) {
                     type="number" step="0.5"
                     value={task.timePlannedHours ?? ''}
                     onChange={(e) => updateTask(i, 'timePlannedHours', Number(e.target.value))}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -108,14 +111,14 @@ export function TaskTable({ tasks, onChange }: Props) {
                     type="number" step="0.5"
                     value={task.timeSpentHours ?? ''}
                     onChange={(e) => updateTask(i, 'timeSpentHours', Number(e.target.value))}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                   />
                 </td>
                 <td className="px-3 py-2">
                   <input
                     value={task.deliverable ?? ''}
                     onChange={(e) => updateTask(i, 'deliverable', e.target.value)}
-                    className="w-full border border-gray-200 rounded px-2 py-1"
+                    className={inputCls}
                     placeholder="PR link, doc, etc."
                   />
                 </td>
@@ -123,7 +126,7 @@ export function TaskTable({ tasks, onChange }: Props) {
                   <button
                     type="button"
                     onClick={() => removeTask(i)}
-                    className="text-gray-400 hover:text-red-600 text-sm"
+                    className="text-gray-300 hover:text-red-500 transition"
                     aria-label="Remove task"
                   >
                     ✕
@@ -137,7 +140,7 @@ export function TaskTable({ tasks, onChange }: Props) {
       <button
         type="button"
         onClick={addTask}
-        className="mt-2 text-sm text-gray-600 hover:text-gray-900 underline"
+        className="mt-3 text-sm text-brand-600 hover:text-brand-700 font-medium"
       >
         + Add task
       </button>

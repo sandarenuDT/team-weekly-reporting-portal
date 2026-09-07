@@ -52,15 +52,28 @@ export default function UsersPage() {
     load();
   }
 
+  // async function handleToggleActive(user: TeamMember) {
+  //   if (user.isActive) {
+  //     await deactivateUser(user.id);
+  //   } else {
+  //     await reactivateUser(user.id);
+  //   }
+  //   load();
+  // }
   async function handleToggleActive(user: TeamMember) {
-    if (user.isActive) {
+  console.log('Toggle clicked for user:', user.id, 'currently active:', user.active);
+  try {
+    if (user.active) {
       await deactivateUser(user.id);
     } else {
       await reactivateUser(user.id);
     }
     load();
+  } catch (err: any) {
+    console.error('Toggle active failed:', err.response?.status, err.response?.data);
+    alert(err.response?.data?.message ?? 'Could not update this user.');
   }
-
+}
   return (
     <RouteGuard allowedRoles={['MANAGER']}>
       <AppShell>
@@ -87,7 +100,7 @@ export default function UsersPage() {
                   <div>
                     <p className="text-sm font-medium">
                       {u.name}
-                      {!u.isActive && <span className="text-xs text-gray-400 ml-2">(deactivated)</span>}
+                      {!u.active && <span className="text-xs text-gray-400 ml-2">(deactivated)</span>}
                     </p>
                     <p className="text-xs text-gray-500">{u.email}</p>
                   </div>
@@ -103,10 +116,10 @@ export default function UsersPage() {
                     <button
                       onClick={() => handleToggleActive(u)}
                       className={`text-sm underline ${
-                        u.isActive ? 'text-red-600 hover:text-red-800' : 'text-green-700 hover:text-green-900'
+                        u.active ? 'text-red-600 hover:text-red-800' : 'text-green-700 hover:text-green-900'
                       }`}
                     >
-                      {u.isActive ? 'Deactivate' : 'Reactivate'}
+                      {u.active ? 'Deactivate' : 'Reactivate'}
                     </button>
                   </div>
                 </div>

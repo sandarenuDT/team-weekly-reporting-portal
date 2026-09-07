@@ -136,7 +136,7 @@ export default function MyReportPage() {
   return (
     <RouteGuard allowedRoles={['TEAM_MEMBER']}>
       <AppShell>
-        <div className="max-w-4xl mx-auto p-8">
+        <div className="max-w-15xl mx-auto p-8">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-semibold">Week of {weekStart}</h1>
             {report && <StatusBadge status={report.status} />}

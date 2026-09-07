@@ -44,7 +44,18 @@ export function ReportTable({ reports, showMember = false, detailBasePath }: Pro
               <td className="px-4 py-2">
                 <StatusBadge status={r.status} />
               </td>
-              <td className="px-4 py-2 text-right text-gray-400">→</td>
+              <td className="px-4 py-2 text-right">
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      router.push(`${detailBasePath}/${r.id}`);
+    }}
+    className="text-brand-600 hover:text-brand-700"
+    aria-label="View report"
+  >
+    →
+  </button>
+</td>
             </tr>
           ))}
         </tbody>
