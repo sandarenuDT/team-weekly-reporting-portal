@@ -114,7 +114,7 @@ public class UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .role(user.getRole())
-                .isActive(user.isActive())
+                .active(user.isActive())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

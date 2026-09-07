@@ -60,4 +60,8 @@ public class Report {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Version
+    @Column(name = "version_lock")
+    private Long versionLock;
 }
