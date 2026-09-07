@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { register } from '@/lib/authService';
 import { AuthLayout } from '@/components/auth/AuthLayout';
-
+import { toast } from 'sonner';
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -31,6 +31,7 @@ export default function RegisterPage() {
     try {
       await register(name, email, password);
       router.push('/login');
+      toast.success('Account created successfully.');
     } catch (err: any) {
       setError(err.response?.data?.message ?? 'Couldn\u2019t create your account. Try again.');
     } finally {

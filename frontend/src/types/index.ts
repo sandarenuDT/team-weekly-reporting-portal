@@ -10,6 +10,7 @@ export interface AuthUser {
 }
 
 export interface AuthResponse {
+  message: string;
   accessToken: string;
   userId: number;
   name: string;

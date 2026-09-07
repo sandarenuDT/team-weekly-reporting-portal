@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { AuthLayout } from '@/components/auth/AuthLayout';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -24,6 +25,7 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login(email, password);
+      toast.success('Login successful.');
     } catch {
       setError('That email and password don\u2019t match.');
     } finally {
