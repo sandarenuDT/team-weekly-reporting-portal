@@ -16,7 +16,8 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "recharts": "^2.15.4"
+    "recharts": "^2.15.4",
+    "sonner": "^2.0.8"
   },
   "devDependencies": {
     "@types/node": "^20",
