@@ -5,7 +5,7 @@ export interface TeamMember {
   name: string;
   email: string;
   role: 'TEAM_MEMBER' | 'MANAGER';
-  isActive: boolean;
+  active: boolean;
   createdAt: string;
 }
 
