@@ -6,6 +6,7 @@ import { AppShell } from '@/components/AppShell';
 import { Modal } from '@/components/Modal';
 import { createProject, deleteProject, getProjects, updateProject } from '@/lib/projectService';
 import { Project } from '@/types';
+import { toast } from 'sonner';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -40,18 +41,22 @@ export default function ProjectsPage() {
 
   async function handleSave() {
     if (!name.trim()) {
+      toast.error('Project name is required.');
       setError('Project name is required.');
       return;
     }
     try {
       if (editing === 'new') {
         await createProject(name, description);
+        toast.success('Project created successfully.');
       } else if (editing) {
         await updateProject(editing.id, name, description);
+        toast.success('Project updated successfully.');
       }
       setEditing(null);
       load();
     } catch (err: any) {
+      toast.error(err.response?.data?.message ?? 'Could not save the project.');
       setError(err.response?.data?.message ?? 'Could not save the project.');
     }
   }
@@ -59,6 +64,7 @@ export default function ProjectsPage() {
   async function handleDelete(project: Project) {
     if (!confirm(`Deactivate "${project.name}"? Existing reports will keep their history.`)) return;
     await deleteProject(project.id);
+    toast.success('Project deactivated successfully.');
     load();
   }
 

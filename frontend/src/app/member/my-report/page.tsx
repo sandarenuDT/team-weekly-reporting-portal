@@ -16,6 +16,7 @@ import {
 } from '@/lib/reportService';
 import { getReport } from '@/lib/reportService';
 import { Achievement, Blocker, HoursByTaskType, Project, Report, Task } from '@/types';
+import { toast } from 'sonner';
 
 function mondayOfCurrentWeek(): string {
   const today = new Date();
@@ -87,6 +88,7 @@ export default function MyReportPage() {
   async function handleSaveDraft() {
     if (!projectId) {
       setMessage('Select a project before saving.');
+      toast.error('Select a project before saving.');
       return;
     }
     setSaving(true);
@@ -95,33 +97,43 @@ export default function MyReportPage() {
       const payload = buildPayload();
       const saved = report ? await updateReport(report.id, payload) : await createReport(payload);
       hydrateFromReport(saved);
-      setMessage('Draft saved.');
+      // setMessage('Draft saved.');
+      toast.success('Draft saved successfully.');
     } catch {
-      setMessage('Could not save the draft. Please try again.');
+      toast.error('Could not save the draft. Please try again.');
+      // setMessage('Could not save the draft. Please try again.');
     } finally {
       setSaving(false);
     }
   }
 
   async function handleSubmit() {
-    if (!projectId || tasks.length === 0) {
-      setMessage('Add at least one task before submitting.');
-      return;
-    }
-    setSaving(true);
-    setMessage('');
-    try {
-      const payload = buildPayload();
-      const saved = report ? await updateReport(report.id, payload) : await createReport(payload);
-      const submitted = await submitReport(saved.id);
-      hydrateFromReport(submitted);
-      setMessage('Report submitted for review.');
-    } catch {
-      setMessage('Could not submit the report. Please try again.');
-    } finally {
-      setSaving(false);
-    }
+  if (!projectId || tasks.length === 0) {
+    toast.error('Add at least one task before submitting.');
+    // console.log('Add at least one task before submitting.');
+    // setMessage('Add at least one task before submitting.');
+    return;
   }
+
+  setSaving(true);
+  setMessage('');
+
+  try {
+    const payload = buildPayload();
+
+    const saved = report
+      ? await updateReport(report.id, payload)
+      : await createReport(payload);
+
+    const submitted = await submitReport(saved.id);
+    hydrateFromReport(submitted);
+    toast.success('Report submitted successfully.');
+  } catch (error) {
+    toast.error('Could not submit the report. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+}
 
   if (loading) {
     return (
@@ -147,7 +159,8 @@ export default function MyReportPage() {
 
           {report?.status === 'NEEDS_CORRECTION' && report.latestReviewerComment && (
             <div className="bg-amber-50 border border-amber-200 rounded px-4 py-3 mb-6 text-sm text-amber-800">
-              <strong>Manager feedback:</strong> {report.latestReviewerComment}
+              <strong>Manager feedback:</strong>{' '} 
+              {report.latestReviewerComment || 'No comment provided.'}
             </div>
           )}
 

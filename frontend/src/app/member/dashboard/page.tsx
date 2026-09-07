@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getMyReports, getReport } from '@/lib/reportService';
 import { getCommentHistory } from '@/lib/reviewService';
 import { ReportSummary, Report } from '@/types';
+import { toast } from 'sonner';
 
 function formatDateRange(start: string, end: string): string {
   const s = new Date(start);
@@ -52,6 +53,8 @@ export default function MemberDashboardPage() {
     async function load() {
       const list = await getMyReports();
       setReports(list);
+      // toast.success('Login successfull.');
+
 
       const sorted = [...list].sort((a, b) => b.weekStart.localeCompare(a.weekStart));
       const mostRecent = sorted[0] ?? null;
@@ -127,37 +130,7 @@ const recent = [...reports].sort((a, b) => b.weekStart.localeCompare(a.weekStart
 
           <div className="grid md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-6">
-              {/* <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h2 className="font-heading text-sm font-semibold text-gray-900 mb-4">Latest Report</h2>
-                {latest ? (
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-sm font-medium text-gray-900">
-                        {formatDateRange(latest.weekStart, latest.weekEnd)}
-                      </span>
-                      <span className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">
-                        {latest.projectName}
-                      </span>
-                      <span className="ml-auto">
-                        <StatusBadge status={latest.status} />
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 mb-4">
-                      Submitted on {formatDate(latest.submittedAt)}
-                      {commentCount > 0 && ` · ${commentCount} comment${commentCount > 1 ? 's' : ''}`}
-                    </p>
-                    <button
-                      onClick={() => router.push(`/member/reports/${latest.id}`)}
-                      className="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition"
-                    >
-                      View Report
-                    </button>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-400">No reports yet — create your first one.</p>
-                )}
-              </div> */}
-
+             
               <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100">
                   <h2 className="font-heading text-sm font-semibold text-gray-900">Recent Reports</h2>

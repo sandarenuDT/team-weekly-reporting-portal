@@ -7,7 +7,7 @@ import { Modal } from '@/components/Modal';
 import {
   TeamMember, deactivateUser, getAllUsers, inviteUser, reactivateUser, updateUserRole,
 } from '@/lib/userService';
-
+import { toast } from 'sonner';
 export default function UsersPage() {
   const [users, setUsers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,48 +30,45 @@ export default function UsersPage() {
   async function handleInvite() {
     setError('');
     if (!name || !email || !password) {
+      toast.error('All fields are required.');
       setError('All fields are required.');
       return;
     }
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
+      toast.error('Password must be at least 8 characters.');
       return;
     }
     try {
       await inviteUser(name, email, password, role);
       setInviting(false);
       setName(''); setEmail(''); setPassword(''); setRole('TEAM_MEMBER');
+      toast.success('User invited successfully.');
       load();
     } catch (err: any) {
-      setError(err.response?.data?.message ?? 'Could not invite this user.');
+      toast.error(err.response?.data?.message ?? 'Could not invite this user.');
     }
   }
 
   async function handleRoleChange(userId: number, newRole: string) {
     await updateUserRole(userId, newRole);
+    toast.success('User role updated successfully.');
     load();
   }
 
-  // async function handleToggleActive(user: TeamMember) {
-  //   if (user.isActive) {
-  //     await deactivateUser(user.id);
-  //   } else {
-  //     await reactivateUser(user.id);
-  //   }
-  //   load();
-  // }
   async function handleToggleActive(user: TeamMember) {
   console.log('Toggle clicked for user:', user.id, 'currently active:', user.active);
   try {
     if (user.active) {
       await deactivateUser(user.id);
+      toast.success('User deactivated successfully.');
     } else {
       await reactivateUser(user.id);
+      toast.success('User reactivated successfully.');
     }
     load();
   } catch (err: any) {
     console.error('Toggle active failed:', err.response?.status, err.response?.data);
-    alert(err.response?.data?.message ?? 'Could not update this user.');
+    toast.error(err.response?.data?.message ?? 'Could not update this user.');
   }
 }
   return (
