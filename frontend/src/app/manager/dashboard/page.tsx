@@ -125,7 +125,7 @@ export default function ManagerDashboardPage() {
                     outerRadius={54}
                     paddingAngle={2}
                     stroke="none"
-                    label={({ label, value }) => `${label} (${value})`}
+                    // label={({ label, value }) => `${label} (${value})`}
                   >
                     {workload.map((_, i) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} />

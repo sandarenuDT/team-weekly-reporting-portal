@@ -10,6 +10,8 @@ import com.company.weeklyreports.repository.ReportRepository;
 import com.company.weeklyreports.repository.ReviewCommentRepository;
 import com.company.weeklyreports.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +28,14 @@ public class DashboardService {
     private final HoursByTaskTypeRepository hoursByTaskTypeRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserRepository userRepository;
-
+    private static final Logger log =
+            LoggerFactory.getLogger(DashboardService.class);
     @Transactional(readOnly = true)
     public DashboardMetricsResponse getMetrics(LocalDate weekStart) {
         long totalMembers = userRepository.count(); // includes managers; refine with a role filter if you separate them out
         long submitted = reportRepository.countByWeekStartAndStatus(weekStart, ReportStatus.SUBMITTED);
         long approved = reportRepository.countByWeekStartAndStatus(weekStart, ReportStatus.APPROVED);
+
         long needsCorrection = reportRepository.countByStatus(ReportStatus.NEEDS_CORRECTION);
 
         long reportsThisWeek = reportRepository.findByWeekStart(weekStart).size();
@@ -104,7 +108,6 @@ public class DashboardService {
     }
 
     private long countOpenBlockers() {
-        // "Open" = a blocker attached to any report not yet APPROVED.
         return reportRepository.findAll().stream()
                 .filter(r -> r.getStatus() != ReportStatus.APPROVED)
                 .filter(r -> r.getCurrentVersion() != null)
@@ -141,4 +144,14 @@ public class DashboardService {
                 })
                 .toList();
     }
+    private TeamMemberStatusResponse toStatus(User member, Report report) {
+        boolean draftHidden = report != null && report.getStatus() == ReportStatus.DRAFT;
+        return TeamMemberStatusResponse.builder()
+                .userId(member.getId())
+                .userName(member.getName())
+                .reportId(draftHidden ? null : (report != null ? report.getId() : null))
+                .status(draftHidden || report == null ? "NOT_STARTED" : report.getStatus().name())
+                .build();
+    }
+
 }
