@@ -15,7 +15,7 @@ import {
 // import { useToast } from '@/context/ToastContext';
 import { toast } from 'sonner';
 import { Achievement, Blocker, HoursByTaskType, Project, Report, ReportStatus, Task } from '@/types';
-
+import { VersionHistoryPanel } from '@/components/reports/VersionHistoryPanel'; // adjust path to wherever this actually lives
 function mondayOfCurrentWeek(): string {
   const today = new Date();
   const day = today.getDay() === 0 ? 7 : today.getDay();
@@ -24,7 +24,35 @@ function mondayOfCurrentWeek(): string {
   return monday.toISOString().split('T')[0];
 }
 
-function NothingToDo({ weekStart, status }: { weekStart: string; status: ReportStatus }) {
+// function NothingToDo({ weekStart, status, reportId, currentVersionNumber }: { weekStart: string; status: ReportStatus; reportId: string, }) {
+//   const router = useRouter();
+//   const copy = status === 'APPROVED'
+//     ? { title: 'You\u2019re all set for this week', body: 'Your report for this week has already been approved. There\u2019s nothing left to submit.' }
+//     : { title: 'Report already submitted', body: 'Your report for this week is in with your manager for review. You\u2019ll be notified if any changes are needed.' };
+
+//   return (
+//     <div className="max-w-lg mx-auto text-center py-20">
+//       <div className="w-14 h-14 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-2xl font-bold mx-auto mb-5">
+//         {status === 'APPROVED' ? '\u2713' : '\u25cf'}
+//       </div>
+//       <h1 className="font-heading text-lg font-semibold text-gray-900 mb-1.5">{copy.title}</h1>
+//       <p className="text-sm text-gray-500 mb-1">{copy.body}</p>
+//       <p className="text-xs text-gray-400 mb-6">Week of {weekStart}</p>
+//       <button
+//         onClick={() => router.push('/member/history')}
+//         className="text-sm text-brand-600 hover:text-brand-700 font-medium underline"
+//       >
+//         View it in your report history →
+//       </button>
+//     </div>
+//   );
+// }
+function NothingToDo({ weekStart, status, reportId, currentVersionNumber }: {
+  weekStart: string;
+  status: ReportStatus;
+  reportId: number;
+  currentVersionNumber: number;
+}) {
   const router = useRouter();
   const copy = status === 'APPROVED'
     ? { title: 'You\u2019re all set for this week', body: 'Your report for this week has already been approved. There\u2019s nothing left to submit.' }
@@ -44,10 +72,13 @@ function NothingToDo({ weekStart, status }: { weekStart: string; status: ReportS
       >
         View it in your report history →
       </button>
+
+      <div className="mt-8 text-left">
+        <VersionHistoryPanel reportId={reportId} currentVersionNumber={currentVersionNumber} />
+      </div>
     </div>
   );
 }
-
 export default function MyReportPage() {
   const router = useRouter();
   // const toast = useToast();
@@ -150,10 +181,25 @@ export default function MyReportPage() {
   }
 
   // State 3: locked — nothing to fill in, just a message.
+  // if (locked && report) {
+  //   return (
+  //     <RouteGuard allowedRoles={['TEAM_MEMBER']}>
+  //       <AppShell><NothingToDo weekStart={weekStart} status={report.status} /></AppShell>
+  //     </RouteGuard>
+  //   );
+  // }
+    // State 3: locked — nothing to fill in, just a message.
   if (locked && report) {
     return (
       <RouteGuard allowedRoles={['TEAM_MEMBER']}>
-        <AppShell><NothingToDo weekStart={weekStart} status={report.status} /></AppShell>
+        <AppShell>
+          <NothingToDo
+            weekStart={weekStart}
+            status={report.status}
+            reportId={report.id}
+            currentVersionNumber={report.currentVersion.versionNumber}
+          />
+        </AppShell>
       </RouteGuard>
     );
   }
@@ -171,9 +217,23 @@ export default function MyReportPage() {
           </div>
           <p className="text-sm text-gray-500 mb-6">Week of {weekStart}</p>
 
-          {report?.status === 'NEEDS_CORRECTION' && report.latestReviewerComment && (
+          {/* {report?.status === 'NEEDS_CORRECTION' && report.latestReviewerComment && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800 mb-6">
               <span className="font-medium">Manager feedback:</span> {report.latestReviewerComment}
+            </div>
+          )} */}
+                    {report?.status === 'NEEDS_CORRECTION' && report.latestReviewerComment && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800 mb-6">
+              <span className="font-medium">Manager feedback:</span> {report.latestReviewerComment}
+            </div>
+          )}
+
+          {report && (
+            <div className="mb-6">
+              <VersionHistoryPanel
+                reportId={report.id}
+                currentVersionNumber={report.currentVersion.versionNumber}
+              />
             </div>
           )}
 
