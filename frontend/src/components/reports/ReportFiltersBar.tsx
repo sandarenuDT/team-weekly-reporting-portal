@@ -59,7 +59,7 @@ export function ReportFiltersBar({ filters, onChange, members, projects }: Props
           className="border border-gray-300 rounded px-2 py-1.5 text-sm"
         >
           <option value="">All statuses</option>
-          <option value="DRAFT">Draft</option>
+          {/* <option value="DRAFT">Draft</option> */}
           <option value="SUBMITTED">Submitted</option>
           <option value="NEEDS_CORRECTION">Needs correction</option>
           <option value="APPROVED">Approved</option>
