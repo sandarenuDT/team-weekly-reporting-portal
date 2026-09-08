@@ -33,6 +33,10 @@ public class ReportService {
     public ReportResponse createDraft(CustomUserDetails currentUser, ReportContentRequest request) {
         User user = userRepository.findById(currentUser.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        LocalDate weekStart = request.getWeekStart()
+                .minusDays(request.getWeekStart().getDayOfWeek().getValue() - 1L);
+
+        LocalDate weekEnd = weekStart.plusDays(6);
 
         reportRepository.findByUserIdAndWeekStart(user.getId(), request.getWeekStart())
                 .ifPresent(r -> {
@@ -149,9 +153,13 @@ public class ReportService {
         if (!isOwner && !isManager) {
             throw new AccessDeniedCustomException("You do not have access to this report.");
         }
+        if (!isOwner && isManager && report.getStatus() == ReportStatus.DRAFT) {
+            throw new AccessDeniedCustomException("This report is still a draft and isn't visible yet.");
+        }
 
         return toResponse(report, report.getCurrentVersion());
     }
+
 
     @Transactional(readOnly = true)
     public List<ReportVersionResponse> findVersionHistory(CustomUserDetails currentUser, Long reportId) {
@@ -186,7 +194,8 @@ public class ReportService {
                 .and(ReportSpecifications.hasProjectId(projectId))
                 .and(ReportSpecifications.hasStatus(status))
                 .and(ReportSpecifications.weekStartFrom(weekFrom))
-                .and(ReportSpecifications.weekStartTo(weekTo));
+                .and(ReportSpecifications.weekStartTo(weekTo))
+                .and(ReportSpecifications.excludeDraft());
 
         return reportRepository.findAll(spec, pageable).map(this::toSummaryResponse);
     }
@@ -302,4 +311,5 @@ public class ReportService {
                         .build()).toList())
                 .build();
     }
+
 }

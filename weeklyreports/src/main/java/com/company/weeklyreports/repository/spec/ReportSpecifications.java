@@ -27,4 +27,7 @@ public class ReportSpecifications {
     public static Specification<Report> weekStartTo(LocalDate to) {
         return (root, query, cb) -> to == null ? null : cb.lessThanOrEqualTo(root.get("weekStart"), to);
     }
+    public static Specification<Report> excludeDraft() {
+        return (root, query, cb) -> cb.notEqual(root.get("status"), ReportStatus.DRAFT);
+    }
 }
