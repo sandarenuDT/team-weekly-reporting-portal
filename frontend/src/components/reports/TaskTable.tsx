@@ -121,6 +121,17 @@ export function TaskTable({ tasks, onChange }: Props) {
                     className={inputCls}
                     placeholder="PR link, doc, etc."
                   />
+                   {task.deliverable && (
+    <a
+      href={task.deliverable}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:underline text-xs"
+      onClick={(e) => e.stopPropagation()}
+    >
+      Open link
+    </a>
+  )}
                 </td>
                 <td className="px-2 py-2 text-center">
                   <button

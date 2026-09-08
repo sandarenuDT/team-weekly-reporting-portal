@@ -7,7 +7,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 interface Props {
   reports: ReportSummary[];
   showMember?: boolean;
-  detailBasePath: string; // e.g. '/member/reports' or '/manager/reports'
+  detailBasePath: string; // '/member/reports' or '/manager/reports'
 }
 
 export function ReportTable({ reports, showMember = false, detailBasePath }: Props) {
@@ -45,17 +45,17 @@ export function ReportTable({ reports, showMember = false, detailBasePath }: Pro
                 <StatusBadge status={r.status} />
               </td>
               <td className="px-4 py-2 text-right">
-  <button
-    onClick={(e) => {
-      e.stopPropagation();
-      router.push(`${detailBasePath}/${r.id}`);
-    }}
-    className="text-brand-600 hover:text-brand-700"
-    aria-label="View report"
-  >
-    →
-  </button>
-</td>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`${detailBasePath}/${r.id}`);
+                  }}
+                  className="text-brand-600 hover:text-brand-700"
+                  aria-label="View report"
+                >
+                  View
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

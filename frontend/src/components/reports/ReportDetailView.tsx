@@ -49,7 +49,20 @@ export function ReportDetailView({ report }: { report: Report }) {
                   <td className="px-3 py-2">{t.actualPct ?? '—'}</td>
                   <td className="px-3 py-2">{t.status}</td>
                   <td className="px-3 py-2">{t.timePlannedHours ?? '—'} / {t.timeSpentHours ?? '—'}</td>
-                  <td className="px-3 py-2">{t.deliverable ?? '—'}</td>
+                  <td className="px-3 py-2">
+                    {t.deliverable ? (
+                      <a
+                        href={t.deliverable}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {t.deliverable}
+                      </a>
+                    ) : (
+                      '—'
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
