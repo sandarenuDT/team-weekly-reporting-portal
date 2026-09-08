@@ -10,11 +10,13 @@ export async function register(
   name: string,
   email: string,
   password: string,
+  role: 'TEAM_MEMBER' | 'MANAGER'
 ): Promise<AuthResponse> {
   const { data } = await apiClient.post<AuthResponse>('/auth/register', {
     name,
     email,
     password,
+    role
   });
   return data;
 }
